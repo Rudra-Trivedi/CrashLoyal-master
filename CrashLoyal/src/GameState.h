@@ -22,7 +22,7 @@ const int SCREEN_HEIGHT = PIXELS_PER_METER * GAME_GRID_HEIGHT; // The total numb
 const float RIVER_LEFT_X = 0;
 const float RIVER_RIGHT_X = GAME_GRID_WIDTH;
 const float RIVER_TOP_Y = (GAME_GRID_HEIGHT / 2) - 1.5;
-const float RIVER_BOT_Y = (GAME_GRID_HEIGHT / 2) + 1.5;
+const float RIVER_BOT_Y = ((GAME_GRID_HEIGHT / 2) + 1.5);
 
 // Defining sizes of the bridges
 const float BRIDGE_WIDTH = 3;

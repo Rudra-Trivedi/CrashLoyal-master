@@ -154,6 +154,35 @@ bool Mob::targetInRange() {
 //  2) handle collision with towers & river 
 std::vector<std::shared_ptr<Mob>> Mob::checkCollision() {
 	std::vector<std::shared_ptr<Mob>> othermobvec;
+
+	if (this->pos.y > ((GAME_GRID_HEIGHT / 2) - 1.5) && this->pos.y <((GAME_GRID_HEIGHT / 2) + 1.5))
+	{
+		if (!(this->pos.x >= ((GAME_GRID_WIDTH / 4.0) - 3) && this->pos.x <= ((GAME_GRID_WIDTH / 4.0) + 3)) && !((this->pos.x >= ((GAME_GRID_WIDTH - (GAME_GRID_WIDTH / 4.0)) - 3)) && (this->pos.x <= ((GAME_GRID_WIDTH - (GAME_GRID_WIDTH / 4.0)) + 3))))
+		{
+			std::cout << "Collsion Check" << std::endl;
+			this->pos.y = ((GAME_GRID_HEIGHT / 2) + 1.5) + 1.0f;
+		}
+	}
+
+	for (std::shared_ptr<Building> otherBuilding : GameState::buildings)
+	{
+		if (this->pos.insideOf(*(otherBuilding->getPosition()), otherBuilding->GetSize()))
+		{
+			if (this->IsAttackingNorth())
+			{
+				
+				this->pos.y = otherBuilding->getPoint().y + otherBuilding->GetSize();
+
+			}
+
+			else
+			{
+				this->pos.y = otherBuilding->getPoint().y - otherBuilding->GetSize();
+			}
+		}
+	}
+
+
 	for (std::shared_ptr<Mob> otherMob : GameState::mobs) {
 		// don't collide with yourself
 		if ((this->sameMob(otherMob)))
@@ -175,13 +204,220 @@ std::vector<std::shared_ptr<Mob>> Mob::checkCollision() {
 
 void Mob::processCollision(std::shared_ptr<Mob> otherMob, double elapsedTime) {
 	
-	
+	// NEWER APPROACH
+	//Point colpointtl;
+	//Point colpointtr;
+	//Point colpointbl;
+	//Point colpointbr;
+	//colpointtl.x = this->pos.x - this->GetSize();
+	//colpointtl.y = this->pos.y + this->GetSize();
+	//colpointtr.x = this->pos.x + this->GetSize();
+	//colpointtr.y = this->pos.y + this->GetSize();
+	//colpointbl.x = this->pos.x - this->GetSize();
+	//colpointbl.y = this->pos.y - this->GetSize();
+	//colpointbr.x = this->pos.x + this->GetSize();
+	//colpointbr.y = this->pos.y - this->GetSize();
 
-	// Get the Position of the other mob 
+
+	//if ((colpointtl).insideOf(*(otherMob->getPosition()), otherMob->GetSize()))
+	//{
+	//	if (this->GetMass() > otherMob->GetMass())
+	//	{
+	//		
+	//		otherMob->pos.x = this->getPosition()->x + this->GetSize() ;
+	//		otherMob->pos.y = this->getPosition()->y - this->GetSize();
+	//		
+	//	}
+
+	//	else if(this->GetMass() == otherMob->GetMass())
+	//	{
+	//		this->pos.x += this->GetSize();
+	//		this->pos.y -= this->GetSize();
+	//		/*this->pos.x += otherMob->GetSize();
+	//		this->pos.y += otherMob->GetSize();*/
+	//	}
+
+	//	/*else
+	//	{
+	//		otherMob->pos.x += this->GetSize();
+	//		otherMob->pos.y += this->GetSize();
+	//	}*/
+	//}
+
+	//else if ((colpointtr).insideOf(*(otherMob->getPosition()), otherMob->GetSize()))
+	//{
+	//	if (this->GetMass() > otherMob->GetMass())
+	//	{
+
+	//		otherMob->pos.x = this->getPosition()->x + this->GetSize();
+	//		otherMob->pos.y = this->getPosition()->y - this->GetSize();
+
+	//	}
+
+	//	else if (this->GetMass() == otherMob->GetMass())
+	//	{
+	//		this->pos.x += this->GetSize();
+	//		this->pos.y -= this->GetSize();
+	//		/*this->pos.x += otherMob->GetSize();
+	//		this->pos.y += otherMob->GetSize();*/
+	//	}
+
+	//	//else
+	//	//{
+	//	//	this->pos.x = otherMob->getPosition()->x + otherMob->GetSize();
+	//	//	this->pos.y = otherMob->getPosition()->y - otherMob->GetSize();
+	//	//	/*this->pos.x += otherMob->GetSize();
+	//	//	this->pos.y += otherMob->GetSize();*/
+	//	//}
+
+	//	/*else
+	//	{
+	//		otherMob->pos.x += this->GetSize();
+	//		otherMob->pos.y += this->GetSize();
+	//	}*/
+	//}
+
+	//else if ((colpointbl).insideOf(*(otherMob->getPosition()), otherMob->GetSize()))
+	//{
+	//	if (this->GetMass() > otherMob->GetMass())
+	//	{
+
+	//		otherMob->pos.x = this->getPosition()->x + this->GetSize();
+	//		otherMob->pos.y = this->getPosition()->y - this->GetSize();
+
+	//	}
+
+	//	else if (this->GetMass() == otherMob->GetMass())
+	//	{
+	//		this->pos.x += this->GetSize();
+	//		this->pos.y -= this->GetSize();
+	//		/*this->pos.x += otherMob->GetSize();
+	//		this->pos.y += otherMob->GetSize();*/
+	//	}
+
+	//	/*else
+	//	{
+	//		otherMob->pos.x += this->GetSize();
+	//		otherMob->pos.y += this->GetSize();
+	//	}*/
+	//}
+
+	//else if ((colpointbr).insideOf(*(otherMob->getPosition()), otherMob->GetSize()))
+	//{
+	//	if (this->GetMass() > otherMob->GetMass())
+	//	{
+
+	//		otherMob->pos.x = (this->getPosition()->x + this->GetSize()) ;
+	//		otherMob->pos.y = this->getPosition()->y - this->GetSize();
+
+	//	}
+
+	//	else if (this->GetMass() == otherMob->GetMass())
+	//	{
+	//		this->pos.x += this->GetSize();
+	//		this->pos.y -= this->GetSize();
+	//		/*this->pos.x += otherMob->GetSize();
+	//		this->pos.y += otherMob->GetSize();*/
+	//	}
+
+	//	/*else
+	//	{
+	//		otherMob->pos.x += this->GetSize();
+	//		otherMob->pos.y += this->GetSize();
+	//	}*/
+	//}
+
+
+	//older one -----------------------------------------------------------------------------------------------
+	//// Get the Position of the other mob 
+	//std::shared_ptr<Point> OtherMobPos = otherMob->getPosition();
+	//float x = OtherMobPos->x;
+	//float y = OtherMobPos->y;
+	//float size = otherMob->GetSize();
+	//// Getting the coordinates of the corners of the othermob 
+	///*Point TL(x - (size / 2), y - (size / 2));
+	//Point BL(x - (size / 2), y + (size / 2));
+	//Point TR(x + (size / 2), y - (size / 2));
+	//Point BR(x + (size / 2), y + (size / 2));*/
+
+	//Point TL(x - (size / 2), y + (size / 2));
+	//Point BL(x - (size / 2), y - (size / 2));
+	//Point TR(x + (size / 2), y + (size / 2));
+	//Point BR(x + (size / 2), y - (size / 2));
+
+	//// Getting the coordinates of this mob's corners
+	///*Point thisTL(this->getPosition()->x - (this->GetSize() / 2), this->getPosition()->y - (this->GetSize() / 2));
+	//Point thisBL(this->getPosition()->x - (this->GetSize() / 2), this->getPosition()->y + (this->GetSize() / 2));
+	//Point thisTR(this->getPosition()->x + (this->GetSize() / 2), this->getPosition()->y - (this->GetSize() / 2));
+	//Point thisBR(this->getPosition()->x + (this->GetSize() / 2), this->getPosition()->y + (this->GetSize() / 2));*/
+
+	//Point thisTL(this->getPosition()->x - (this->GetSize() / 2), this->getPosition()->y + (this->GetSize() / 2));
+	//Point thisBL(this->getPosition()->x - (this->GetSize() / 2), this->getPosition()->y - (this->GetSize() / 2));
+	//Point thisTR(this->getPosition()->x + (this->GetSize() / 2), this->getPosition()->y + (this->GetSize() / 2));
+	//Point thisBR(this->getPosition()->x + (this->GetSize() / 2), this->getPosition()->y - (this->GetSize() / 2));
+
+
+	//if (TL.x <= thisTR.x && TL.x >= thisTL.x && TL.y <= thisTR.y && TL.y >= thisBR.y)
+	//{
+	//	Point other(((this->getPosition()->x) + ((this->GetSize()) / 2)), this->getPosition()->y);
+	//	float dis = TL.dist(other);
+	//	this->pos.x -= dis + (dis / 2);
+	//	this->pos.y += dis + (dis / 2);
+
+	//	std::cout<< "Top right collision" << "COLLIDING WITH OTHER <<<<<<<<<<<<<<" << std::endl;
+	//
+	//}
+	//
+	//else if (TR.x >= thisTL.x && TR.x <= thisTR.x && TR.y <= thisTL.y && TR.y >= thisBL.y)
+	//{
+	//	Point other(((this->getPosition()->x) - ((this->GetSize()) / 2)), this->getPosition()->y);
+	//	float dis = TR.dist(other);
+	//	this->pos.x += dis + (dis / 2);
+	//	this->pos.y += dis + (dis / 2);
+
+	//	std::cout<<"Top left Collision" << "COLLIDING WITH OTHER <<<<<<<<<<<<<<" << std::endl;
+	//}
+
+	//else if (BL.x >= thisTL.x && BL.x <= thisTR.x && BL.y <= thisTL.y && BL.y >= thisBL.y)
+	//{
+	//	Point other(((this->getPosition()->x) + ((this->GetSize()) / 2)), this->getPosition()->y);
+	//	float dis = BL.dist(other);
+	//	this->pos.x -= dis + (dis / 2);
+	//	this->pos.y -= dis + (dis / 2);
+
+	//	std::cout << "Top Bottom Left Collision" << "COLLIDING WITH OTHER <<<<<<<<<<<<<<" << std::endl;
+	//}
+
+
+	//else if (BR.x >= thisTL.x && TR.x <= thisTR.x && BR.y <= thisTL.y && BR.y >= thisBL.y)
+	//{
+	//	Point other(((this->getPosition()->x) - ((this->GetSize()) / 2)), this->getPosition()->y);
+	//	float dis = BR.dist(other);
+	//	this->pos.x += dis + (dis / 2);
+	//	this->pos.y -= dis + (dis/2);
+	//	std::cout << "Bottom Right Collision" << "COLLIDING WITH OTHER <<<<<<<<<<<<<<" << std::endl;
+	//}
+
+	//
+	//
+
+	// PROJECT 3: YOUR COLLISION HANDLING CODE GOES HERE
+
 	std::shared_ptr<Point> OtherMobPos = otherMob->getPosition();
 	float x = OtherMobPos->x;
 	float y = OtherMobPos->y;
 	float size = otherMob->GetSize();
+	int MassSelect = 0;
+	if (this->GetMass() > otherMob->GetMass())
+	{
+		MassSelect = 1;
+	}
+
+	else if (this->GetMass() == otherMob->GetMass())
+	{
+		MassSelect = 2;
+	}
+
 	// Getting the coordinates of the corners of the othermob 
 	/*Point TL(x - (size / 2), y - (size / 2));
 	Point BL(x - (size / 2), y + (size / 2));
@@ -205,51 +441,92 @@ void Mob::processCollision(std::shared_ptr<Mob> otherMob, double elapsedTime) {
 	Point thisBR(this->getPosition()->x + (this->GetSize() / 2), this->getPosition()->y - (this->GetSize() / 2));
 
 
-	if (TL.x <= thisTR.x && TL.x >= thisTL.x && TL.y <= thisTR.y && TL.y >= thisBR.y)
+	if (TL.insideOf(*(this->getPosition()), this->GetSize()))
 	{
 		Point other(((this->getPosition()->x) + ((this->GetSize()) / 2)), this->getPosition()->y);
 		float dis = TL.dist(other);
-		this->pos.x -= dis + (dis / 2);
-		this->pos.y += dis + (dis / 2);
+		if (MassSelect == 1)
+		{
+			otherMob->pos.x -= dis + (dis / 2);
+			otherMob->pos.y += dis + (dis / 2);
+		}
+		else if (MassSelect == 2)
+		{
+			this->pos.x -= dis + (dis / 2);
+			this->pos.y += dis + (dis / 2);
+		}
 
 		std::cout<< "Top right collision" << "COLLIDING WITH OTHER <<<<<<<<<<<<<<" << std::endl;
 	
 	}
 	
-	else if (TR.x >= thisTL.x && TR.x <= thisTR.x && TR.y <= thisTL.y && TR.y >= thisBL.y)
+	else if (TR.insideOf(*(this->getPosition()), this->GetSize()))
 	{
 		Point other(((this->getPosition()->x) - ((this->GetSize()) / 2)), this->getPosition()->y);
 		float dis = TR.dist(other);
-		this->pos.x += dis + (dis / 2);
-		this->pos.y += dis + (dis / 2);
+
+		if (MassSelect == 1)
+		{
+			otherMob->pos.x += dis + (dis / 2);
+			otherMob->pos.y += dis + (dis / 2);
+		}
+
+		else if (MassSelect == 2)
+		{
+			this->pos.x += dis + (dis / 2);
+			this->pos.y += dis + (dis / 2);
+		}
+
+		/*this->pos.x += dis + (dis / 2);
+		this->pos.y += dis + (dis / 2);*/
 
 		std::cout<<"Top left Collision" << "COLLIDING WITH OTHER <<<<<<<<<<<<<<" << std::endl;
 	}
 
-	else if (BL.x >= thisTL.x && BL.x <= thisTR.x && BL.y <= thisTL.y && BL.y >= thisBL.y)
+	else if (BL.insideOf(*(this->getPosition()), this->GetSize()))
 	{
 		Point other(((this->getPosition()->x) + ((this->GetSize()) / 2)), this->getPosition()->y);
 		float dis = BL.dist(other);
-		this->pos.x -= dis + (dis / 2);
-		this->pos.y -= dis + (dis / 2);
+
+		if (MassSelect == 1)
+		{
+			otherMob->pos.x -= dis + (dis / 2);
+			otherMob->pos.y -= dis + (dis / 2);
+		}
+
+		else if (MassSelect == 2)
+		{
+			this->pos.x -= dis + (dis / 2);
+			this->pos.y -= dis + (dis / 2);
+		}
+
+		/*this->pos.x -= dis + (dis / 2);
+		this->pos.y -= dis + (dis / 2);*/
 
 		std::cout << "Top Bottom Left Collision" << "COLLIDING WITH OTHER <<<<<<<<<<<<<<" << std::endl;
 	}
 
 
-	else if (BR.x >= thisTL.x && TR.x <= thisTR.x && BR.y <= thisTL.y && BR.y >= thisBL.y)
+	else if (BR.insideOf(*(this->getPosition()), this->GetSize()))
 	{
 		Point other(((this->getPosition()->x) - ((this->GetSize()) / 2)), this->getPosition()->y);
 		float dis = BR.dist(other);
-		this->pos.x += dis + (dis / 2);
-		this->pos.y -= dis + (dis/2);
+		if (MassSelect == 1)
+		{
+			otherMob->pos.x += dis + (dis / 2);
+			otherMob->pos.y -= dis + (dis / 2);
+		}
+
+		else if (MassSelect == 2)
+		{
+			this->pos.x += dis + (dis / 2);
+			this->pos.y -= dis + (dis / 2);
+		}
+
+		/*this->pos.x += dis + (dis / 2);
+		this->pos.y -= dis + (dis/2);*/
 		std::cout << "Bottom Right Collision" << "COLLIDING WITH OTHER <<<<<<<<<<<<<<" << std::endl;
 	}
-
-	
-	
-
-	// PROJECT 3: YOUR COLLISION HANDLING CODE GOES HERE
 }
 
 // Collisions
